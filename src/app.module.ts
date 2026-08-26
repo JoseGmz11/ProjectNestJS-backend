@@ -24,6 +24,7 @@ import { ProductoModule } from './producto/producto.module';
         database: configService.get<string>(DB_DATABASE),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         synchronize: true,
+        logging: false, // muestra los queries que se ejecutan en la base de datos
       }),
       inject: [ConfigService],
     }),
