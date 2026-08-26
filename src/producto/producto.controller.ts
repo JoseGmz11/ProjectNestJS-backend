@@ -1,6 +1,6 @@
 import { ProductoDto } from './dto/producto.dto';
 import { ProductoService } from './producto.service';
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, UsePipes, ValidationPipe } from '@nestjs/common';
 
 @Controller('producto')
 export class ProductoController {
@@ -16,11 +16,13 @@ export class ProductoController {
         return await this.productoService.findById(id);
     }
 
+    @UsePipes(new ValidationPipe({ whitelist: true }))
     @Post()
     async create(@Body() dto: ProductoDto){
         return await this.productoService.create(dto);
     }
 
+    @UsePipes(new ValidationPipe({ whitelist: true }))
     @Put(':id')
     async update(@Param('id', ParseIntPipe) id: number,@Body() dto: ProductoDto){
         return await this.productoService.update(id,dto);
