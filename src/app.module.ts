@@ -5,6 +5,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DB_DATABASE, DB_HOST, DB_PASSWORD, DB_PORT, DB_USER } from './config/constants';
 import { ProductoModule } from './producto/producto.module';
+import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -30,6 +32,10 @@ import { ProductoModule } from './producto/producto.module';
     }),
     
     ProductoModule,
+    
+    UsersModule,
+    
+    AuthModule,
 
   ],
   controllers: [AppController],
