@@ -37,7 +37,7 @@ export class AuthService {
             throw new UnauthorizedException('Contraseña incorrecta');
         }
 
-        const payload = { email: user.email };
+        const payload = { email: user.email, rol: user.rol };
         const token = await this.jwtService.signAsync(payload);
 
         return {

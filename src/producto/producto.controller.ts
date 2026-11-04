@@ -2,8 +2,10 @@ import { AuthGuard } from 'src/auth/guard/auth.guard';
 import { ProductoDto } from './dto/producto.dto';
 import { ProductoService } from './producto.service';
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { RolesGuard } from 'src/auth/guard/roles/roles.guard';
+import { Roles } from 'src/decorators/roles.decorator';
 
-@UseGuards(AuthGuard)
+@UseGuards(AuthGuard, RolesGuard)
 @Controller('producto')
 export class ProductoController {
     constructor(private readonly productoService: ProductoService) {}
@@ -18,18 +20,21 @@ export class ProductoController {
         return await this.productoService.findById(id);
     }
 
+    @Roles('admin')
     @UsePipes(new ValidationPipe({ whitelist: true }))
     @Post()
     async create(@Body() dto: ProductoDto){
         return await this.productoService.create(dto);
     }
 
+    @Roles('admin')
     @UsePipes(new ValidationPipe({ whitelist: true }))
     @Put(':id')
     async update(@Param('id', ParseIntPipe) id: number,@Body() dto: ProductoDto){
         return await this.productoService.update(id,dto);
     }
 
+    @Roles('admin')
     @Delete(':id')
     async delete(@Param('id', ParseIntPipe) id: number){
         return await this.productoService.delete(id);
