@@ -14,7 +14,11 @@ export class ProductoService {
     ) {}
 
     async getAll(): Promise<ProductoEntity[]> {
-        const list = await this.productoRepository.find();
+        const list = await this.productoRepository.find({
+            relations: {
+                categoria: true,
+            },
+        });
         if (!list.length) {
             throw new NotFoundException(new MessageDto('No se encontraron productos'));
         }
@@ -22,7 +26,12 @@ export class ProductoService {
     }
 
     async findById(id: number): Promise<ProductoEntity> {
-        const producto = await this.productoRepository.findOneBy( {id} );
+        const producto = await this.productoRepository.findOne({
+            where: { id },
+            relations: {
+                categoria: true,
+            },
+        });
         if (!producto) {
             throw new NotFoundException(new MessageDto(`No se encontró el producto con id ${id}`));
         }
@@ -37,7 +46,12 @@ export class ProductoService {
     async create(dto: ProductoDto): Promise<any> {
         const exists = await this.findByName(dto.nombre!);
         if (exists) throw new BadRequestException(new MessageDto(`El producto con nombre ${dto.nombre} ya existe`));
-        const producto = this.productoRepository.create(dto);
+        const producto = this.productoRepository.create({
+            nombre: dto.nombre,
+            precio: dto.precio,
+            stock: dto.stock,
+            categoria: { id: dto.categoriaId }
+        });
         await this.productoRepository.save(producto);
         return new MessageDto(`Producto ${producto.nombre} creado exitosamente`);
         //return dto;
@@ -50,6 +64,8 @@ export class ProductoService {
         if (exists && exists.id !== id) throw new BadRequestException(new MessageDto(`El producto con nombre ${dto.nombre} ya existe`));
         dto.nombre? producto.nombre = dto.nombre : producto.nombre = producto.nombre;
         dto.precio? producto.precio = dto.precio : producto.precio = producto.precio;
+        dto.stock? producto.stock = dto.stock : producto.stock = producto.stock;
+        dto.categoriaId? producto.categoria = { id: dto.categoriaId } as any : producto.categoria = producto.categoria;
         await this.productoRepository.save(producto);
         return new MessageDto(`Producto ${producto.nombre} actualizado exitosamente`);
     }

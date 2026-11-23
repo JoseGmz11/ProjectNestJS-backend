@@ -7,6 +7,7 @@ import { DB_DATABASE, DB_HOST, DB_PASSWORD, DB_PORT, DB_USER } from './config/co
 import { ProductoModule } from './producto/producto.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { CategoriaModule } from './categoria/categoria.module';
 
 @Module({
   imports: [
@@ -36,6 +37,8 @@ import { AuthModule } from './auth/auth.module';
     UsersModule,
     
     AuthModule,
+    
+    CategoriaModule,
 
   ],
   controllers: [AppController],
